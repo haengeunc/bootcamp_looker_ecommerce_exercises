@@ -1,5 +1,5 @@
 view: products {
-  sql_table_name: `bigquery-public-data.products` ;;
+  sql_table_name: `bigquery-public-data.thelook_ecommerce.products` ;;
   drill_fields: [id]
 
   dimension: id {
