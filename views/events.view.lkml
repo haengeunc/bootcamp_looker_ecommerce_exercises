@@ -1,3 +1,4 @@
+#events
 view: events {
   sql_table_name: `bigquery-public-data.thelook_ecommerce.events` ;;
   drill_fields: [id]
