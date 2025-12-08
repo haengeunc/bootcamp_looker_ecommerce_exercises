@@ -1,5 +1,5 @@
 view: users {
-  sql_table_name: `looker_scratch.users` ;;
+  sql_table_name: `bigquery-public-data.users` ;;
   drill_fields: [id]
 
   dimension: id {

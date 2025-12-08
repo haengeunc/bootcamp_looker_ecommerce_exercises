@@ -1,5 +1,5 @@
 view: distribution_centers {
-  sql_table_name: `looker_scratch.distribution_centers` ;;
+  sql_table_name: `bigquery-public-data.distribution_centers` ;;
   drill_fields: [id]
 
   dimension: id {

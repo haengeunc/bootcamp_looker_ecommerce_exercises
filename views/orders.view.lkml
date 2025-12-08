@@ -1,5 +1,5 @@
 view: orders {
-  sql_table_name: `looker_scratch.orders` ;;
+  sql_table_name: `bigquery-public-data.orders` ;;
   drill_fields: [order_id]
 
   dimension: order_id {

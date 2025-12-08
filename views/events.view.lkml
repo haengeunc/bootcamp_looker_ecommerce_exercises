@@ -1,5 +1,5 @@
 view: events {
-  sql_table_name: `looker_scratch.events` ;;
+  sql_table_name: `bigquery-public-data.events` ;;
   drill_fields: [id]
 
   dimension: id {

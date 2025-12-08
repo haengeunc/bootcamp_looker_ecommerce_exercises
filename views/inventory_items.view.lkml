@@ -1,5 +1,5 @@
 view: inventory_items {
-  sql_table_name: `looker_scratch.inventory_items` ;;
+  sql_table_name: `bigquery-public-data.inventory_items` ;;
   drill_fields: [id]
 
   dimension: id {

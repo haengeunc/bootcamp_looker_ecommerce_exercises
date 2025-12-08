@@ -1,5 +1,5 @@
 view: products {
-  sql_table_name: `looker_scratch.products` ;;
+  sql_table_name: `bigquery-public-data.products` ;;
   drill_fields: [id]
 
   dimension: id {
