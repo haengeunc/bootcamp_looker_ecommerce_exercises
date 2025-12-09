@@ -11,6 +11,12 @@ view: users {
     type: number
     sql: ${TABLE}.age ;;
   }
+  dimension: age_tier {
+    type: tier
+    tiers: [18, 25, 50,80]
+    style: integer
+    sql: ${age} ;;
+  }
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
@@ -24,6 +30,11 @@ view: users {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: days_since_signup {
+    type:  number
+    sql: date_diff(current_date(),${created_date},day) ;;
   }
   dimension: email {
     type: string
@@ -45,6 +56,7 @@ view: users {
     type: string
     sql: CONCAT(${first_name}," ",${last_name}) ;;
   }
+
   dimension: latitude {
     type: number
     sql: ${TABLE}.latitude ;;
@@ -61,6 +73,10 @@ view: users {
     type: string
     sql: ${TABLE}.state ;;
   }
+  dimension: full_address {
+    type: string
+    sql: CONCAT(${city}, ", ", ${state}) ;;
+  }
   dimension: street_address {
     type: string
     sql: ${TABLE}.street_address ;;
@@ -68,6 +84,10 @@ view: users {
   dimension: traffic_source {
     type: string
     sql: ${TABLE}.traffic_source ;;
+  }
+  dimension: is_email_source {
+    type: yesno
+    sql:  ${traffic_source} = 'Email' ;;
   }
   dimension: user_geom {
     type: string
