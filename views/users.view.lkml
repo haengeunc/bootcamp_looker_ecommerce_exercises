@@ -41,6 +41,35 @@ view: users {
     type: string
     sql: ${TABLE}.last_name ;;
   }
+
+  dimension: full_name {
+    type: string
+    sql: ${first_name} | " " | ${last_name} ;;
+  }
+
+  dimension_group: since_signup {
+    type: duration
+    sql_start: ${created_date} ;;
+    sql_end: current_date() ;;
+    intervals: [day, month, year]
+  }
+
+  dimension: city_state {
+    type: string
+    sql: CONCAT(${city}, "-", ${state}) ;;
+  }
+
+  dimension: age_group {
+    type: tier
+    tiers: [18, 25, 50, 80]
+    sql: ${age} ;;
+  }
+
+  dimension: traffic_source_is_email {
+    type: yesno
+    sql: ${traffic_source} = "Email";;
+  }
+
   dimension: latitude {
     type: number
     sql: ${TABLE}.latitude ;;
@@ -77,13 +106,13 @@ view: users {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	last_name,
-	first_name,
-	events.count,
-	order_items.count,
-	orders.count
-	]
+      id,
+      last_name,
+      first_name,
+      events.count,
+      order_items.count,
+      orders.count
+    ]
   }
 
 }
