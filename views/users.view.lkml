@@ -25,6 +25,21 @@ view: users {
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.created_at ;;
   }
+
+  # dimension: days_since_signup {
+  #   type: number
+  #   sql: date_diff(current_date(), ${created_date}, day)    ;;
+  # }
+
+
+  dimension_group: since_signup {
+    type: duration
+    sql_start: ${created_date} ;;
+    sql_end: current_date() ;;
+    intervals: [day, month, year]
+  }
+
+
   dimension: email {
     type: string
     sql: ${TABLE}.email ;;
@@ -41,6 +56,13 @@ view: users {
     type: string
     sql: ${TABLE}.last_name ;;
   }
+
+  dimension: full_name {
+    type: string
+    # sql: ${first_name} | " " | ${last_name} ;;
+    sql: CONCAT(${first_name}," " , ${last_name}) ;;
+  }
+
   dimension: latitude {
     type: number
     sql: ${TABLE}.latitude ;;
@@ -77,13 +99,13 @@ view: users {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	last_name,
-	first_name,
-	events.count,
-	order_items.count,
-	orders.count
-	]
+  id,
+  last_name,
+  first_name,
+  events.count,
+  order_items.count,
+  orders.count
+  ]
   }
 
 }
