@@ -57,6 +57,10 @@ view: users {
     type: string
     sql: ${TABLE}.state ;;
   }
+  dimension: state_cirt {
+    type: string
+    sql: CONCAT (${state}, "-",${city}) ;;
+  }
   dimension: street_address {
     type: string
     sql: ${TABLE}.street_address ;;
@@ -77,13 +81,13 @@ view: users {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	last_name,
-	first_name,
-	events.count,
-	order_items.count,
-	orders.count
-	]
+  id,
+  last_name,
+  first_name,
+  events.count,
+  order_items.count,
+  orders.count
+  ]
   }
 
 }
