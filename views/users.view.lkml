@@ -11,6 +11,14 @@ view: users {
     type: number
     sql: ${TABLE}.age ;;
   }
+
+  #Task 2: Create a dimension (using ‘tier’ type) in your users view that groups individual ages into the following age group buckets: 18, 25, 50, 80
+
+  dimension: age_group {
+    type: tier
+    tiers: [18, 25, 50, 80]
+    sql: ${age} ;;
+  }
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
@@ -20,10 +28,23 @@ view: users {
     map_layer_name: countries
     sql: ${TABLE}.country ;;
   }
+
+  #Task 1: Create a dimension in your users view that combines City and State into one single field (Use the CONCAT BigQuery function)
+  dimension: city_state {
+    type: string
+    sql: CONCAT(${TABLE}.city, ", ", ${TABLE}.state) ;;
+  }
+
   dimension_group: created {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.created_at ;;
+  }
+  dimension_group: since_signup {
+    type: duration
+    sql_start: ${created_date} ;;
+    sql_end: current_date() ;;
+    intervals: [day, month, year]
   }
   dimension: email {
     type: string
@@ -40,7 +61,14 @@ view: users {
   dimension: last_name {
     type: string
     sql: ${TABLE}.last_name ;;
+}
+
+ dimension: full_name {
+    type: string
+    # sql: ${first_name} | " " | ${last_name} ;;
+    sql: CONCAT(${first_name}," " , ${last_name}) ;;
   }
+
   dimension: latitude {
     type: number
     sql: ${TABLE}.latitude ;;
@@ -65,6 +93,11 @@ view: users {
     type: string
     sql: ${TABLE}.traffic_source ;;
   }
+  #Task 3: Create a dimension (using ‘yesno’ type) that calculates whether the Traffic Source that brought in a given user was “Email” or not.
+    dimension: is_email_source {
+      type: yesno
+      sql: ${traffic_source} = 'Email' ;;
+    }
   dimension: user_geom {
     type: string
     sql: ${TABLE}.user_geom ;;
@@ -77,13 +110,12 @@ view: users {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	last_name,
-	first_name,
-	events.count,
-	order_items.count,
-	orders.count
-	]
-  }
-
+  id,
+  last_name,
+  first_name,
+  events.count,
+  order_items.count,
+  orders.count
+  ]
+}
 }
