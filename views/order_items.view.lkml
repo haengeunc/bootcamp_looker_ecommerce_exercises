@@ -40,15 +40,25 @@ view: order_items {
   dimension: sale_price {
     type: number
     sql: ${TABLE}.sale_price ;;
+    value_format_name: usd
+    synonyms: ["revenue", "income"]
   }
+
+
+
+
+
   dimension_group: shipped {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.shipped_at ;;
   }
   dimension: status {
+    view_label: "Specific fields"
     type: string
     sql: ${TABLE}.status ;;
+    #this is to show status
+    tags: ["stat"]
   }
   dimension: user_id {
     type: number
@@ -60,19 +70,48 @@ view: order_items {
     drill_fields: [detail*]
   }
 
+  measure: total_sale {
+    value_format_name: usd_0
+    description: "Revenue based on sale price"
+    group_label: "Sale"
+    label: "Revenue"
+    type: sum
+    sql: ${sale_price} ;;
+
+  }
+
+  measure: jeans_total_sale {
+    sql: ${sale_price} ;;
+    type: sum
+    filters: [products.category: "Jeans"]
+  }
+
+  measure: jeans_revenue_share {
+    type: number
+    sql: SAFE_DIVIDE(${jeans_total_sale} ,${total_sale}) ;;
+    value_format_name: percent_1
+  }
+
+  measure: average_sale {
+    type: average
+    sql: ${sale_price} ;;
+    group_label: "Sale"
+    # value_format_name: sar
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	users.last_name,
-	users.id,
-	users.first_name,
-	inventory_items.id,
-	inventory_items.product_name,
-	products.name,
-	products.id,
-	orders.order_id
-	]
+  id,
+  users.last_name,
+  users.id,
+  users.first_name,
+  inventory_items.id,
+  inventory_items.product_name,
+  products.name,
+  products.id,
+  orders.order_id
+  ]
   }
 
 }
