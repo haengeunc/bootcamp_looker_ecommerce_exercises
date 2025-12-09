@@ -33,6 +33,12 @@ view: users {
     type: string
     sql: ${TABLE}.first_name ;;
   }
+
+  dimension: full_name {
+    type: string
+    sql: ${first_name} || " " ||  ${last_name};;
+  }
+
   dimension: gender {
     type: string
     sql: ${TABLE}.gender ;;
@@ -69,6 +75,37 @@ view: users {
     type: string
     sql: ${TABLE}.user_geom ;;
   }
+
+  dimension_group: since_signup {
+    type: duration
+    sql_start: ${created_date} ;;
+    sql_end: current_date() ;;
+    intervals: [day, month, year]
+  }
+
+  dimension: since_signup_days {
+    type:  number
+    sql:  date_diff(current_date(), ${created_date}, day) ;;
+  }
+
+
+  dimension: age_tier {
+    type: tier
+    tiers: [18, 25, 50, 80]
+    style: integer
+    sql: ${age} ;;
+  }
+
+  dimension: is_email_source {
+    type: yesno
+    sql: ${traffic_source} = 'Email' ;;
+  }
+
+  dimension: full_address{
+    type: string
+    sql: ${city} || "," ||  ${state};;
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -77,13 +114,13 @@ view: users {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	last_name,
-	first_name,
-	events.count,
-	order_items.count,
-	orders.count
-	]
+      id,
+      last_name,
+      first_name,
+      events.count,
+      order_items.count,
+      orders.count
+    ]
   }
 
 }
