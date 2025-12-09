@@ -75,7 +75,15 @@ view: order_items {
   measure: total_sales_email_users {
     type: sum
     sql: ${sale_price} ;;
+    value_format_name: usd_0
     filters: [users.traffic_source_is_email: "yes"]
+    group_label: "Sale"
+  }
+
+  measure: percent_of_total_sales_email_users {
+    type: number
+    sql: SAFE_DIVIDE(${total_sales_email_users} , ${total_sales}) ;;
+    value_format_name: percent_2
     group_label: "Sale"
   }
 
