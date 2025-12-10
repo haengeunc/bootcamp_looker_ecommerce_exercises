@@ -20,6 +20,30 @@ view: users {
     map_layer_name: countries
     sql: ${TABLE}.country ;;
   }
+
+  parameter: dimension_selector {
+    type: unquoted
+    allowed_value: {
+      label: "Country"
+      value: "country"
+    }
+    allowed_value: {
+      label: "City"
+      value: "city"
+    }
+
+    default_value: "country"
+  }
+
+  dimension: dynamic_dimension_selected {
+    type: string
+    sql: {% if dimension_selector._parameter_value == "country" %}${country}{% else %}${city}{% endif %}  ;;
+
+    label_from_parameter: dimension_selector
+  }
+
+
+
   dimension_group: created {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]

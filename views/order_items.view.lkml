@@ -2,6 +2,45 @@ view: order_items {
   sql_table_name: `bigquery-public-data.thelook_ecommerce.order_items` ;;
   drill_fields: [id]
 
+
+  #parameter: date_granularity_selector {
+  #  type: unquoted
+  #  default_value: "created_month"
+  #  allowed_value: {
+  #    value: "created_date"
+  #    label: "Date"
+  #  }
+  #  allowed_value: {
+  #    value: "created_week"
+  #    label: "Week"
+  #  }
+  #  allowed_value: {
+  #    value: "created_month"
+  #    label: "Month"
+  #  }
+  #}
+  #
+  #dimension: dynamic_timeframe {
+  #  label_from_parameter: date_granularity_selector
+  #  type: string
+  #  sql:
+  #  {% if date_granularity_selector._parameter_value == 'created_date' %}
+  #    ${created_date}
+  #  {% elsif date_granularity_selector._parameter_value == 'created_week' %}
+  #    ${created_week}
+  #  {% else %}
+  #    ${created_month}
+  #  {% endif %} ;;
+  #}
+
+
+  #dimension: dynamic_timeframe {
+  #  type: date
+  #  sql: ${TABLE}.{% parameter date_granularity_selector %} ;;
+  #  label_from_parameter: date_granularity_selector
+  #}
+
+
   dimension: id {
     primary_key: yes
     type: number
@@ -65,6 +104,7 @@ view: order_items {
     # hidden: yes
     sql: ${TABLE}.user_id ;;
   }
+
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -78,12 +118,19 @@ view: order_items {
     type: sum
     sql: ${sale_price} ;;
 
+    drill_fields: [details_reduced*]
+
+    html: @{unified_styling} ;;
+
   }
 
   measure: jeans_total_sale {
     sql: ${sale_price} ;;
     type: sum
     filters: [products.category: "Jeans"]
+    drill_fields: [details_reduced*]
+
+    html: @{unified_styling} ;;
   }
 
   measure: jeans_revenue_share {
@@ -113,5 +160,16 @@ view: order_items {
   orders.order_id
   ]
   }
+
+
+  set: details_reduced {
+    fields: [
+      id, delivered_date
+    ]
+  }
+
+
+
+
 
 }
